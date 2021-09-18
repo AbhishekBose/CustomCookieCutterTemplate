@@ -9,7 +9,9 @@ RUN pip3 install --upgrade pip
 RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
 
 COPY ./app /app
+COPY ./conf /conf
 WORKDIR /app
 RUN ls
-ENTRYPOINT gunicorn --bind :8080 --workers 2 --threads 8 main:app --worker-class uvicorn.workers.UvicornH11Worker --preload --timeout 60 --worker-tmp-dir /dev/shm
+#ENTRYPOINT gunicorn --bind :8080 --workers 2 --threads 8 main:app --worker-class uvicorn.workers.UvicornH11Worker --preload --timeout 60 --worker-tmp-dir /dev/shm
 
+ENTRYPOINT gunicorn --worker-class uvicorn.workers.UvicornH11Worker --preload -c /conf/gunicorn_conf.py main:app
